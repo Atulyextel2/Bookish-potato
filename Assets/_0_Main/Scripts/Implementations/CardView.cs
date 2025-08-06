@@ -3,30 +3,23 @@ using UnityEngine.UI;
 
 public class CardView : MonoBehaviour
 {
-    private Card card;
-    [SerializeField] private Image cardFrontImage, cardBackImage;
+    public Card card { get; private set; }
+    [SerializeField] private Image cardFrontImage, cardImage;
 
     public void Initialize(Card card, Sprite face, Sprite back)
     {
-        if (card != null)
-        {
-            this.card = card;
-        }
-
-        if (cardFrontImage != null)
-        {
-            if (face != null)
-            {
-                cardFrontImage.sprite = face;
-            }
-        }
-
-        if (cardBackImage != null)
+        if (cardImage != null)
         {
             if (back != null)
             {
-                cardBackImage.sprite = back;
+                cardImage.sprite = back;
             }
+        }
+        if (card != null)
+        {
+            this.card = card;
+            card.OnFlipped += c => cardImage.sprite = c.IsFaceUp ? face : back;
+            cardImage.sprite = back;
         }
     }
 }

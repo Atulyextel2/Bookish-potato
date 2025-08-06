@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.U2D;
 [CreateAssetMenu(fileName = "CardData", menuName = "CardMatch/CardData")]
 public class CardData : ScriptableObject
 {
