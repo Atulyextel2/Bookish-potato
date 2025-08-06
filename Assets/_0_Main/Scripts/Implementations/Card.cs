@@ -1,4 +1,6 @@
-public class CardTile : Tile, IFlippable, IMatchable
+using System;
+
+public class Card : IFlippable, IMatchable
 {
     public string MatchId { get; }
     public bool IsFaceUp { get; private set; }
