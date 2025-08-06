@@ -1335,6 +1335,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InputProviders: {fileID: 711103797}
+  _cardPrefab: {fileID: 4754187365074747039, guid: a5e2a70cf676e4a5ea0d23d22ae3a78a, type: 3}
+  gameConfig: {fileID: 11400000, guid: 2c76302f4708046a392af5d3127b928d, type: 2}
 --- !u!1 &1948452229
 GameObject:
   m_ObjectHideFlags: 0

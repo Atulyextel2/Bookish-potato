@@ -3,7 +3,8 @@ using UnityEngine;
 public class GameCompositionRoot : MonoBehaviour
 {
         [SerializeField] private GameObject InputProviders;
-        [SerializeField] GameObject _cardPrefab;
+        [SerializeField] private GameObject _cardPrefab;
+        [SerializeField] private GameConfig gameConfig;
 
         #region  All the internal dependencies
 
