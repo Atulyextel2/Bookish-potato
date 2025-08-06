@@ -1,3 +1,4 @@
+// Infrastructure/GameConfig.cs
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ public class GameConfig : ScriptableObject
         public int cols;
     }
 
-    [Tooltip("Player-visible list of difficulty presets")]
+    [Tooltip("Player-visible board size presets")]
     public List<LayoutPreset> presets = new List<LayoutPreset>
     {
         new LayoutPreset { name = "Easy",   rows = 2, cols = 2 },
@@ -21,9 +22,13 @@ public class GameConfig : ScriptableObject
         new LayoutPreset { name = "Hard",   rows = 5, cols = 6 }
     };
 
-    [Tooltip("Seconds to wait after flip animations before matching")]
-    public float flipAnimationDuration = 0.5f;
+    [Tooltip("Which preset to select by default (index into the above list)")]
+    public int defaultPresetIndex = 0;
 
-    [Tooltip("Points awarded per match")]
-    public int scorePerMatch = 10;
+    [Tooltip("How many cards must be selected to form a match; default = 2")]
+    [Min(2)]
+    public int matchGroupSize = 2;
+
+    [Tooltip("Delay (in seconds) to wait after flip animations before checking match")]
+    public float flipAnimationDuration = 0.5f;
 }
