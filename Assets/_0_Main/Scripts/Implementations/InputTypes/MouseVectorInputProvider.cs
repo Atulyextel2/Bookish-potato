@@ -12,6 +12,6 @@ public class MouseVectorInputProvider : MonoBehaviour, IInputProvider
             OnFlipRequest?.Invoke(worldPos);
         }
     }
-    public void Enable()  => enabled = true;
-    public void Disable() => enabled = false;
+    public void Enable() => this.enabled = true;
+    public void Disable() => this.enabled = false;
 }
