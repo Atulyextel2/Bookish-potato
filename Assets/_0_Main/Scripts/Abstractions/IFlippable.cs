@@ -1,12 +1,6 @@
-
-
-namespace CardMatching.Abstraction
+public interface IFlippable
 {
-    public interface IFlippable
-    {
-        void Flip();
-        bool IsFaceUp { get; }
-    }
+    void Flip();
+    bool IsFaceUp { get; }
 }
-
 

@@ -1,0 +1,1 @@
+public interface IMatchable { string MatchId { get; } }
