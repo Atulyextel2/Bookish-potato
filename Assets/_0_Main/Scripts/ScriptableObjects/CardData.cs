@@ -1,8 +1,8 @@
 using UnityEngine;
+using UnityEngine.U2D;
 [CreateAssetMenu(fileName = "CardData", menuName = "CardMatch/CardData")]
 public class CardData : ScriptableObject
 {
-    public string matchId;
-    public int faceAtlasIndex;
-    public int backAtlasIndex;
+    [SerializeField] private string matchId;
+    [SerializeField] private Sprite faceSprite, backSprite;
 }
