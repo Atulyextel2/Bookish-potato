@@ -11,6 +11,8 @@ public class GameCompositionRoot : MonoBehaviour
         private ICardDataProvider dataProvider;
         private CardFactory cardFactory;
         private CardViewRegistry cardViewRegistry;
+        private ILayoutStrategy layoutStrategy;
+        private BoardManager boardManager;
 
         #endregion
 
@@ -21,6 +23,9 @@ public class GameCompositionRoot : MonoBehaviour
                 cardFactory = new CardFactory(_cardPrefab);
                 cardViewRegistry = new CardViewRegistry();
                 cardFactory.OnCardCreated += cardViewRegistry.Register;
+                layoutStrategy = new GridLayoutStrategy();
+                boardManager = new BoardManager(dataProvider, cardFactory, layoutStrategy);
+
         }
 
         private void SetUpInput()
