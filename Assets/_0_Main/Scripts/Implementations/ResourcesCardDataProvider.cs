@@ -8,7 +8,7 @@ public class ResourcesCardDataProvider : ICardDataProvider
     public IReadOnlyList<CardData> GetCardData()
     {
         if (_allCardDataList == null)
-            _allCardDataList = Resources.LoadAll<CardData>("CardData").ToList();
+            _allCardDataList = Resources.LoadAll<CardData>("CardData_Set_1").ToList();
         return _allCardDataList;
     }
 }
