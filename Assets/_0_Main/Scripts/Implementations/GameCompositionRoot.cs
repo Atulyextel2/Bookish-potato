@@ -5,6 +5,8 @@ public class GameCompositionRoot : MonoBehaviour
         [SerializeField] private GameObject InputProviders;
         [SerializeField] private GameObject _cardPrefab;
         [SerializeField] private GameConfig gameConfig;
+        [SerializeField] private SoundEffectConfig _soundConfig;
+        [SerializeField] private AudioSource _audioSource;
 
         #region  All the internal dependencies
 
@@ -14,6 +16,7 @@ public class GameCompositionRoot : MonoBehaviour
         private CardViewRegistry cardViewRegistry;
         private ILayoutStrategy layoutStrategy;
         private BoardManager boardManager;
+        private AudioManager audioManager;
 
         #endregion
 
@@ -26,6 +29,7 @@ public class GameCompositionRoot : MonoBehaviour
                 cardFactory.OnCardCreated += cardViewRegistry.Register;
                 layoutStrategy = new GridLayoutStrategy();
                 boardManager = new BoardManager(dataProvider, cardFactory, layoutStrategy);
+                audioManager = new AudioManager(_soundConfig, _audioSource);
 
         }
 
