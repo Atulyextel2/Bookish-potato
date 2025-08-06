@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,7 @@ public class GameStateMachine
     readonly int _totalGroups;
     int _matchedGroups;
 
+    public event Action GameOver;    // fired when all groups matched
     public IGameState CurrentState => _current;
 
     public GameStateMachine(
@@ -35,20 +37,21 @@ public class GameStateMachine
         _current.Enter();
     }
 
-    // Selection helpers
     internal void AddSelection(Card c) => _selection.Add(c);
     internal bool IsSelectionComplete() => _selection.Count == _matchGroupSize;
-    internal bool IsMatch() => _selection.All(c => c.MatchId == _selection[0].MatchId);
+    internal bool IsMatch() => _selection.All(x => x.MatchId == _selection[0].MatchId);
     internal void ClearSelection() => _selection.Clear();
 
-    // Called by CheckingMatchState
     internal void RecordResult(bool isMatch)
     {
         _score.RecordResult(isMatch);
         if (isMatch) _matchedGroups++;
 
         if (_matchedGroups >= _totalGroups)
+        {
+            GameOver?.Invoke();
             TransitionTo(new GameOverState(this));
+        }
         else
             TransitionTo(new WaitingForFlipState(this));
     }

@@ -25,6 +25,7 @@ public class GameCompositionRoot : MonoBehaviour
         private ScoreManager scoreManager;
         private FlipCommandQueue flipCommandQueue;
         private GameController gameController;
+        private AnimationManager animationManager;
 
         #endregion
 
@@ -50,25 +51,7 @@ public class GameCompositionRoot : MonoBehaviour
                         int savedIndex = gameConfig.presets.FindIndex(p => p.name == gameProgress.SelectedPresetName);
                         int defaultIdx = Mathf.Clamp(savedIndex, 0, gameConfig.presets.Count - 1);
                         layoutSelector.Initialize(gameConfig.presets, defaultIdx);
-
-                        // Build on selection
-                        layoutSelector.OnLayoutSelected += (rows, cols, presetIdx) =>
-                        {
-                                // Persist choice
-                                gameProgress.SelectedPresetName = gameConfig.presets[presetIdx].name;
-                                progressRepository.Save(gameProgress);
-
-                                // Board
-                                var board = new BoardManager(dataProvider, cardFactory, layoutStrategy);
-                                board.SetupBoard(rows, cols, _boardContainer);
-
-                                // FSM with dynamic match size
-                                int totalGroups = (rows * cols) / gameConfig.matchGroupSize;
-                                var fsm = new GameStateMachine(audioManager, scoreManager, gameConfig.matchGroupSize, totalGroups);
-
-                                // Controller init
-                                gameController.Initialize(inputProvider, flipCommandQueue, fsm, gameConfig.flipAnimationDuration);
-                        };
+                        BuildGame(gameProgress);
                 }
                 else
                 {
@@ -79,6 +62,29 @@ public class GameCompositionRoot : MonoBehaviour
                         Application.Quit();
 #endif
                 }
+        }
+
+        private void BuildGame(GameProgress gameProgress)
+        {
+
+                // Build on selection
+                layoutSelector.OnLayoutSelected += (rows, cols, presetIdx) =>
+                {
+                        // Persist choice
+                        gameProgress.SelectedPresetName = gameConfig.presets[presetIdx].name;
+                        progressRepository.Save(gameProgress);
+
+                        // Board
+                        var board = new BoardManager(dataProvider, cardFactory, layoutStrategy);
+                        board.SetupBoard(rows, cols, _boardContainer);
+
+                        // FSM with dynamic match size
+                        int totalGroups = (rows * cols) / gameConfig.matchGroupSize;
+                        var fsm = new GameStateMachine(audioManager, scoreManager, gameConfig.matchGroupSize, totalGroups);
+
+                        // Controller init
+                        gameController.Initialize(inputProvider, flipCommandQueue, fsm, gameConfig.flipAnimationDuration);
+                };
         }
 
         private bool HandledSerializeFieldDependencies()
