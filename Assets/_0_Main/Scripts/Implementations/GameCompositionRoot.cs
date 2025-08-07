@@ -65,14 +65,12 @@ public class GameCompositionRoot : MonoBehaviour
                 _uIController.OnHome += OnHomePressed;
         }
 
-        void OnGameOver()
+        private void OnGameOver()
         {
-                // Simply disable input; UIController will still show the play canvas,
-                // and the Home button is already wired for returning to start.
-                GetComponent<IInputProvider>().Disable();
+                inputProvider.Disable();
         }
 
-        void OnHomePressed()
+        private void OnHomePressed()
         {
                 foreach (Transform child in _boardContainer)
                         Destroy(child.gameObject);
@@ -80,7 +78,7 @@ public class GameCompositionRoot : MonoBehaviour
                 inputProvider.Disable();
         }
 
-        void OnLevelSelected(int rows, int cols, int idx)
+        private void OnLevelSelected(int rows, int cols, int idx)
         {
                 _selRows = rows;
                 _selCols = cols;
@@ -108,7 +106,8 @@ public class GameCompositionRoot : MonoBehaviour
                 #endregion
 
                 #region Building FSM
-                int totalGroups = (_selRows * _selRows) / _gameConfig.matchGroupSize;
+                int totalGroups = (_selRows * _selCols) / _gameConfig.matchGroupSize;
+                Debug.Log("totalGroups " + totalGroups);
                 GameStateMachine fsm = new GameStateMachine(audioManager, scoreManager, _gameConfig.matchGroupSize, totalGroups);
                 fsm.OnGameOver += OnGameOver;
 

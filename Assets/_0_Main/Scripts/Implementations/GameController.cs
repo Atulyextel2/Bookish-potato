@@ -34,6 +34,7 @@ public class GameController : MonoBehaviour
     }
     private void HandleOnGroupReady(List<Card> group)
     {
+        Debug.Log("GC HandleOnGroupReady " + group);
         StartCoroutine(DelayedCheck(group));
     }
     private void Update()

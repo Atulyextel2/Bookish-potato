@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
+[Serializable]
 public class GameStateMachine
 {
     readonly int _matchGroupSize;
@@ -50,6 +50,7 @@ public class GameStateMachine
 
     public void HandleMatchResult(bool isMatch, List<Card> group)
     {
+        UnityEngine.Debug.Log("GFSM HandleMatchResult");
         _audio.Play(isMatch ? SoundType.Match : SoundType.Mismatch);
         _score.RecordResult(isMatch);
         OnMatchResult?.Invoke(isMatch, group);
@@ -61,6 +62,7 @@ public class GameStateMachine
                 card?.Flip();
             }
         }
+        _currentGroup.Clear();
         if (_matchedGroups >= _totalGroups)
         {
             _audio.Play(SoundType.GameOver);
