@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 public class GameStateMachine
 {
-    IGameState _current;
-    readonly List<Card> _selection = new List<Card>();
-    readonly IAudioService _audio;
-    readonly ScoreManager _score;
     readonly int _matchGroupSize;
     readonly int _totalGroups;
     int _matchedGroups;
 
-    public event Action GameOver;    // fired when all groups matched
-    public IGameState CurrentState => _current;
+    readonly IAudioService _audio;
+    readonly ScoreManager _score;
 
-    public event Action<bool, List<Card>> OnMatchChecked;
+    readonly List<Card> _currentGroup = new List<Card>();
+
+    public event Action<List<Card>> OnGroupReady;
+    public event Action<bool, List<Card>> OnMatchResult;
+    public event Action OnGameOver;
 
     public GameStateMachine(IAudioService audio, ScoreManager score, int matchGroupSize, int totalGroups)
     {
@@ -23,43 +23,48 @@ public class GameStateMachine
         _score = score;
         _matchGroupSize = matchGroupSize;
         _totalGroups = totalGroups;
-        TransitionTo(new WaitingForFlipState(this));
+        _matchedGroups = 0;
     }
 
-    public void OnCardFlipped(Card c) => _current.HandleFlip(c);
-    public void CheckForMatch() => _current.CheckForMatch();
-
-    public void TransitionTo(IGameState next)
+    public void HandleCardFlip(Card card)
     {
-        _current = next;
-        _current.Enter();
+        if (card.IsFaceUp) return;
+        FlipCard(card);
     }
 
-    internal void AddSelection(Card c) => _selection.Add(c);
-    internal bool IsSelectionComplete() => _selection.Count == _matchGroupSize;
-    internal bool IsMatch() => _selection.All(x => x.MatchId == _selection[0].MatchId);
-    internal void ClearSelection() => _selection.Clear();
-
-    internal void RecordResult(bool isMatch)
+    private void FlipCard(Card card)
     {
-        var cards = new List<Card>(_selection);
-        _score.RecordResult(isMatch);
-        if (isMatch) _matchedGroups++;
-        OnMatchChecked?.Invoke(isMatch, cards);
-        _selection.Clear();
-        if (_matchedGroups >= _totalGroups)
+        _audio.Play(SoundType.Flip);
+        card.Flip();
+    }
+
+    public void HandleFlipCompleted(Card card)
+    {
+        UnityEngine.Debug.Log("GFSM HandleFlipCompleted " + card);
+        _currentGroup.Add(card);
+        if (_currentGroup.Count == _matchGroupSize)
         {
-            GameOver?.Invoke();
-            TransitionTo(new GameOverState(this));
+            OnGroupReady?.Invoke(new List<Card>(_currentGroup));
         }
+    }
+
+    public void HandleMatchResult(bool isMatch, List<Card> group)
+    {
+        _audio.Play(isMatch ? SoundType.Match : SoundType.Mismatch);
+        _score.RecordResult(isMatch);
+        OnMatchResult?.Invoke(isMatch, group);
+        if (isMatch) _matchedGroups++;
         else
         {
-            TransitionTo(new WaitingForFlipState(this));
+            foreach (Card card in _currentGroup)
+            {
+                card?.Flip();
+            }
         }
-    }
-
-    internal void PlayGameOver()
-    {
-        _audio.Play(SoundType.GameOver);
+        if (_matchedGroups >= _totalGroups)
+        {
+            _audio.Play(SoundType.GameOver);
+            OnGameOver?.Invoke();
+        }
     }
 }

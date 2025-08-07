@@ -63,6 +63,7 @@ public class UIController : MonoBehaviour
     /// </summary>
     public void UpdateScore(int matches, int tries)
     {
+        Debug.Log("UpdateScore is called from UIController " + matches + " - " + matches);
         matchesText.text = $"Matches: {matches}";
         triesText.text = $"Tries: {tries}";
     }

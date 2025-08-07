@@ -11,7 +11,7 @@ public class ScoreManager
     {
         Matches = matches;
         Tries = tries;
-        OnScoreChanged?.Invoke(Matches, Tries);
+        //OnScoreChanged?.Invoke(Matches, Tries);
     }
 
     public void SetUpLeaderBoard(GameProgress gameProgress)
@@ -24,6 +24,7 @@ public class ScoreManager
 
     public void RecordResult(bool isMatch)
     {
+        UnityEngine.Debug.Log(" RecordResult called from ScoreManager " + isMatch);
         Tries++;
         if (isMatch) Matches++;
         OnScoreChanged?.Invoke(Matches, Tries);

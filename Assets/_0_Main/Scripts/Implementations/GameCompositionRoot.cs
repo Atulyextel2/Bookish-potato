@@ -38,6 +38,8 @@ public class GameCompositionRoot : MonoBehaviour
                         _progressRepository = new JsonFileProgressRepository();
                         GameProgress _lastSavedGameProgress = _progressRepository.Load();
                         scoreManager = new ScoreManager();
+                        scoreManager.OnScoreChanged += _uIController.UpdateScore;
+
                         SetUpInput();
                         audioManager = new AudioManager(_soundConfig, _audioSource);
                         int savedIndex = _gameConfig.presets.FindIndex(p => p.name == _lastSavedGameProgress.SelectedPresetName);
@@ -57,7 +59,6 @@ public class GameCompositionRoot : MonoBehaviour
 
         private void HookUpUI(int defaultIdx)
         {
-                scoreManager.OnScoreChanged += _uIController.UpdateScore;
                 _uIController.OnLevelSelected += OnLevelSelected;
                 _uIController.InitializeLevelDropdown(_gameConfig.presets, defaultIdx);
                 _uIController.OnStart += OnStartPressed;
@@ -97,6 +98,9 @@ public class GameCompositionRoot : MonoBehaviour
                 cardFactory = new CardFactory(_cardPrefab);
                 cardViewRegistry = new CardViewRegistry();
                 cardFactory.OnCardCreated += cardViewRegistry.Register;
+                // TODO: need to handle gameController in a genric way so the just needs to be reinit instead of remove and adding again.
+                gameController = this.gameObject.AddComponent<GameController>();
+                AnimationManager animationManager = new AnimationManager(cardFactory, gameController);
                 layoutStrategy = new GridLayoutStrategy();
                 boardManager = new BoardManager(dataProvider, cardFactory, layoutStrategy, _gameConfig.matchGroupSize);
                 boardManager.SetupBoard(_selRows, _selCols, _boardContainer);
@@ -104,20 +108,17 @@ public class GameCompositionRoot : MonoBehaviour
                 #endregion
 
                 #region Building FSM
-
-                // FSM with dynamic match size
                 int totalGroups = (_selRows * _selRows) / _gameConfig.matchGroupSize;
                 GameStateMachine fsm = new GameStateMachine(audioManager, scoreManager, _gameConfig.matchGroupSize, totalGroups);
-                fsm.GameOver += OnGameOver;
+                fsm.OnGameOver += OnGameOver;
 
                 #endregion
 
                 #region  Add the GameController
 
-                // TODO: need to handle gameController in a genric way so the just needs to be reinit instead of remove and adding again.
-                gameController = this.gameObject.AddComponent<GameController>();
+
                 flipCommandQueue = new FlipCommandQueue();
-                gameController.Initialize(inputProvider, flipCommandQueue, fsm, _gameConfig.flipAnimationDuration, audioManager);
+                gameController.Initialize(inputProvider, flipCommandQueue, fsm, _gameConfig.flipAnimationDuration);
 
                 #endregion
 

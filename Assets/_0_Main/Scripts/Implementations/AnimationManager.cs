@@ -12,7 +12,7 @@ public class AnimationManager
     void AnimateFlip(CardView view, GameController ctrl)
     {
         view.transform
-            .DORotate(new UnityEngine.Vector3(0, 180, 0), 0.3f)
+            .DORotate(new UnityEngine.Vector3(0, 0, 0), 0.0f)
             .OnComplete(() => ctrl.OnFlipAnimationComplete(view.card));
     }
 }
