@@ -36,7 +36,10 @@ public class GameController : MonoBehaviour
     {
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity) && hit.collider.TryGetComponent<CardView>(out var view))
         {
-            _queue.Enqueue(new FlipCommand(view.card));
+            if (!view.card.IsFaceUp)
+            {
+                _queue.Enqueue(new FlipCommand(view.card));
+            }
         }
     }
     private void HandleOnGroupReady(List<Card> group)
