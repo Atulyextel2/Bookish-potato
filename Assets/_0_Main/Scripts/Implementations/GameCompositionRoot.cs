@@ -85,7 +85,6 @@ public class GameCompositionRoot : MonoBehaviour
 
         void OnLevelSelected(int rows, int cols, int idx)
         {
-                Debug.Log("!@# OnLevelSelected " + rows + cols + idx);
                 _selRows = rows;
                 _selCols = cols;
                 _selPresetIdx = idx;
@@ -103,7 +102,7 @@ public class GameCompositionRoot : MonoBehaviour
                 cardViewRegistry = new CardViewRegistry();
                 cardFactory.OnCardCreated += cardViewRegistry.Register;
                 layoutStrategy = new GridLayoutStrategy();
-                boardManager = new BoardManager(dataProvider, cardFactory, layoutStrategy);
+                boardManager = new BoardManager(dataProvider, cardFactory, layoutStrategy, _gameConfig.matchGroupSize);
                 boardManager.SetupBoard(_selRows, _selCols, _boardContainer);
 
                 #endregion
