@@ -2,10 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using TMPro;
 
 public class LayoutSelector : MonoBehaviour
 {
-    [SerializeField] Dropdown _dropdown;
+    [SerializeField] TMP_Dropdown _dropdown;
     List<GameConfig.LayoutPreset> _presets;
     public event Action<int, int, int> OnLayoutSelected;
 
@@ -15,7 +16,7 @@ public class LayoutSelector : MonoBehaviour
         _dropdown.options.Clear();
 
         for (int i = 0; i < _presets.Count; i++)
-            _dropdown.options.Add(new Dropdown.OptionData(_presets[i].name));
+            _dropdown.options.Add(new TMP_Dropdown.OptionData(_presets[i].name));
 
         _dropdown.value = Mathf.Clamp(defaultIndex, 0, _presets.Count - 1);
         _dropdown.RefreshShownValue();

@@ -9,11 +9,7 @@ public class GameController : MonoBehaviour
     float _delay;
     bool _waiting = false;
 
-    public void Initialize(
-        IInputProvider input,
-        FlipCommandQueue queue,
-        GameStateMachine fsm,
-        float flipDelay)
+    public void Initialize(IInputProvider input, FlipCommandQueue queue, GameStateMachine fsm, float flipDelay)
     {
         _input = input;
         _queue = queue;

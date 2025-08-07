@@ -4,17 +4,10 @@ using UnityEngine.UI;
 public class CardView : MonoBehaviour
 {
     public Card card { get; private set; }
-    [SerializeField] private Image cardFrontImage, cardImage;
+    [SerializeField] private Image cardImage;
 
     public void Initialize(Card card, Sprite face, Sprite back)
     {
-        if (cardImage != null)
-        {
-            if (back != null)
-            {
-                cardImage.sprite = back;
-            }
-        }
         if (card != null)
         {
             this.card = card;

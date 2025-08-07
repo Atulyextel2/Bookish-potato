@@ -1,45 +1,66 @@
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 public class UIController : MonoBehaviour
 {
-    [Header("Panels")]
-    [SerializeField] GameObject startPanel;
-    [SerializeField] GameObject levelPanel;
-    [SerializeField] GameObject gameOverPanel;
+    [Header("Canvases")]
+    [SerializeField] GameObject startCanvas;
+    [SerializeField] GameObject playCanvas;
 
-    [Header("Buttons")]
+    [Header("Start Screen")]
     [SerializeField] Button startButton;
-    [SerializeField] Button homeButton;
-
-    [Header("Level Selection")]
     [SerializeField] LayoutSelector layoutSelector;
 
-    [Header("Score Display")]
-    [SerializeField] Text matchesText;
-    [SerializeField] Text triesText;
+    [Header("Play Screen")]
+    [SerializeField] Button homeButton;
+    [SerializeField] TextMeshProUGUI matchesText;
+    [SerializeField] TextMeshProUGUI triesText;
 
+    // Intent events for Composition Root
     public event Action OnStart;
     public event Action<int, int, int> OnLevelSelected;
     public event Action OnHome;
 
     void Awake()
     {
-        // wire Start
-        startButton.onClick.AddListener(() => OnStart?.Invoke());
+        // Initially only start screen
+        startCanvas.SetActive(true);
+        playCanvas.SetActive(false);
 
-        // wire Level dropdown
-        layoutSelector.OnLayoutSelected += (r, c, i) => OnLevelSelected?.Invoke(r, c, i);
+        // Start button → switch canvases + notify
+        startButton.onClick.AddListener(() =>
+        {
+            startCanvas.SetActive(false);
+            playCanvas.SetActive(true);
+            OnStart?.Invoke();
+        });
 
-        // wire Home
-        homeButton.onClick.AddListener(() => OnHome?.Invoke());
+        // Dropdown → pass through rows, cols, index
+        layoutSelector.OnLayoutSelected += (r, c, i) =>
+            OnLevelSelected?.Invoke(r, c, i);
+
+        // Home button → switch back + notify
+        homeButton.onClick.AddListener(() =>
+        {
+            playCanvas.SetActive(false);
+            startCanvas.SetActive(true);
+            OnHome?.Invoke();
+        });
     }
 
-    public void ShowStartPanel(bool show) => startPanel.SetActive(show);
-    public void ShowLevelPanel(bool show) => levelPanel.SetActive(show);
-    public void ShowGameOverPanel(bool show) => gameOverPanel.SetActive(show);
+    /// <summary>
+    /// Populate the level dropdown. Call this once from Composition Root.
+    /// </summary>
+    public void InitializeLevelDropdown(System.Collections.Generic.List<GameConfig.LayoutPreset> presets, int defaultIndex)
+    {
+        layoutSelector.Initialize(presets, defaultIndex);
+    }
 
+    /// <summary>
+    /// Update the on-screen score.
+    /// </summary>
     public void UpdateScore(int matches, int tries)
     {
         matchesText.text = $"Matches: {matches}";
