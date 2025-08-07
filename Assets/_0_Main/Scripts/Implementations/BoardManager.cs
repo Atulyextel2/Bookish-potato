@@ -32,6 +32,8 @@ public class BoardManager
         if (allData.Count == 0)
             Debug.LogError("No CardData available in provider.");
 
+        allData.Shuffle();
+
         var shuffledData = allData
             .OrderBy(_ => UnityEngine.Random.value)
             .ToList();
@@ -47,6 +49,7 @@ public class BoardManager
             .OrderBy(_ => UnityEngine.Random.value)
             .ToList();
 
+        deck.Shuffle();
         Rect[] cells = _layout.CalculateCells(rows, cols, container);
         for (int i = 0; i < deck.Count; i++)
         {
