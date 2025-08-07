@@ -24,4 +24,4 @@ MonoBehaviour:
     cols: 6
   defaultPresetIndex: 0
   matchGroupSize: 2
-  flipAnimationDuration: 0
+  flipAnimationDuration: 0.1

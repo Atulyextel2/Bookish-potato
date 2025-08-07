@@ -16,45 +16,48 @@ public class GameCompositionRoot : MonoBehaviour
 
         #region  All the internal dependencies
 
-        private IInputProvider inputProvider;
-        private ICardDataProvider dataProvider;
-        private CardFactory cardFactory;
-        private CardViewRegistry cardViewRegistry;
-        private ILayoutStrategy layoutStrategy;
-        private BoardManager boardManager;
-        private IAudioService audioManager;
+        private IInputProvider _inputProvider;
+        private ICardDataProvider _dataProvider;
+        private CardFactory _cardFactory;
+        private CardViewRegistry _cardViewRegistry;
+        private ILayoutStrategy _layoutStrategy;
+        private BoardManager _boardManager;
+        private IAudioService _audioManager;
         private IProgressRepository _progressRepository;
-        private ScoreManager scoreManager;
-        private FlipCommandQueue flipCommandQueue;
-        private GameController gameController;
+        private ScoreManager _scoreManager;
+        private FlipCommandQueue _flipCommandQueue;
+        private GameController _gameController;
+        private AnimationManager _animationManager;
+        private GameStateMachine _fsm;
         private int _selRows, _selCols, _selPresetIdx;
 
         #endregion
 
         private void Awake()
         {
-                if (HandledSerializeFieldDependencies())
+                if (!ValidateFields())
                 {
-                        _progressRepository = new JsonFileProgressRepository();
-                        GameProgress _lastSavedGameProgress = _progressRepository.Load();
-                        scoreManager = new ScoreManager();
-                        scoreManager.OnScoreChanged += _uIController.UpdateScore;
-
-                        SetUpInput();
-                        audioManager = new AudioManager(_soundConfig, _audioSource);
-                        int savedIndex = _gameConfig.presets.FindIndex(p => p.name == _lastSavedGameProgress.SelectedPresetName);
-                        int defaultIdx = Mathf.Clamp(savedIndex, 0, _gameConfig.presets.Count - 1);
-                        HookUpUI(defaultIdx);
-                }
-                else
-                {
-                        Debug.LogError("Some of the serializeField Dependencies are not resolved");
+                        Debug.LogError("Missing fields");
 #if UNITY_EDITOR
                         UnityEditor.EditorApplication.isPlaying = false;
 #else
                         Application.Quit();
 #endif
                 }
+                // getting the input manager
+                SetupInput();
+                // getting the audio manager
+                _audioManager = new AudioManager(_soundConfig, _audioSource);
+                // point from where to save and load the LeaderBoard
+                _progressRepository = new JsonFileProgressRepository();
+                GameProgress _lastSavedGameProgress = _progressRepository.Load();
+                // getting the scoremanager for handling users score
+                _scoreManager = new ScoreManager();
+                _scoreManager.OnScoreChanged += _uIController.UpdateScore;
+                // Hooking up the UI
+                int savedIndex = _gameConfig.presets.FindIndex(p => p.name == _lastSavedGameProgress.SelectedPresetName);
+                int defaultIdx = Mathf.Clamp(savedIndex, 0, _gameConfig.presets.Count - 1);
+                HookUpUI(defaultIdx);
         }
 
         private void HookUpUI(int defaultIdx)
@@ -65,19 +68,51 @@ public class GameCompositionRoot : MonoBehaviour
                 _uIController.OnHome += OnHomePressed;
         }
 
+        private void ClearGame()
+        {
+                _inputProvider?.Disable();
+
+                if (_fsm != null)
+                {
+                        _fsm.OnGameOver -= OnHomePressed;
+                        _gameController.ClearAllEvents();
+                }
+
+                if (_gameController != null)
+                {
+                        Destroy(_gameController);
+                }
+                (_animationManager as IDisposable)?.Dispose();
+                if (_cardFactory != null)
+                {
+                        _cardFactory.OnCardCreated -= _cardViewRegistry.Register;
+                }
+                if (_boardContainer != null)
+                {
+                        foreach (Transform child in _boardContainer)
+                        {
+                                Destroy(child.gameObject);
+                        }
+                }
+                _dataProvider = null;
+                _cardFactory = null;
+                _cardViewRegistry = null;
+                _animationManager = null;
+                _layoutStrategy = null;
+                _boardManager = null;
+                _fsm = null;
+                _flipCommandQueue = null;
+                _gameController = null;
+        }
         private void OnGameOver()
         {
-                inputProvider.Disable();
+                _inputProvider.Disable();
         }
 
         private void OnHomePressed()
         {
-                foreach (Transform child in _boardContainer)
-                        Destroy(child.gameObject);
-
-                inputProvider.Disable();
+                ClearGame();
         }
-
         private void OnLevelSelected(int rows, int cols, int idx)
         {
                 _selRows = rows;
@@ -89,55 +124,56 @@ public class GameCompositionRoot : MonoBehaviour
 
         private void OnStartPressed()
         {
-                scoreManager.SetInitial(0, 0);
+                ClearGame();
+                _scoreManager.SetInitial(0, 0);
                 #region Building Game Board 
 
-                dataProvider = new ResourcesCardDataProvider();
-                cardFactory = new CardFactory(_cardPrefab);
-                cardViewRegistry = new CardViewRegistry();
-                cardFactory.OnCardCreated += cardViewRegistry.Register;
+                _dataProvider = new ResourcesCardDataProvider();
+                _cardFactory = new CardFactory(_cardPrefab);
+                _cardViewRegistry = new CardViewRegistry();
+                _cardFactory.OnCardCreated += _cardViewRegistry.Register;
                 // TODO: need to handle gameController in a genric way so the just needs to be reinit instead of remove and adding again.
-                gameController = this.gameObject.AddComponent<GameController>();
-                AnimationManager animationManager = new AnimationManager(cardFactory, gameController);
-                layoutStrategy = new GridLayoutStrategy();
-                boardManager = new BoardManager(dataProvider, cardFactory, layoutStrategy, _gameConfig.matchGroupSize);
-                boardManager.SetupBoard(_selRows, _selCols, _boardContainer);
+                _gameController = this.gameObject.AddComponent<GameController>();
+                _animationManager = new AnimationManager(_cardFactory, _gameController);
+                _layoutStrategy = new GridLayoutStrategy();
+                _boardManager = new BoardManager(_dataProvider, _cardFactory, _layoutStrategy, _gameConfig.matchGroupSize);
+                _boardManager.SetupBoard(_selRows, _selCols, _boardContainer);
 
                 #endregion
 
                 #region Building FSM
                 int totalGroups = (_selRows * _selCols) / _gameConfig.matchGroupSize;
-                GameStateMachine fsm = new GameStateMachine(audioManager, scoreManager, _gameConfig.matchGroupSize, totalGroups);
-                fsm.OnGameOver += OnGameOver;
+                _fsm = new GameStateMachine(_audioManager, _scoreManager, _gameConfig.matchGroupSize, totalGroups);
+                _fsm.OnGameOver += OnGameOver;
 
                 #endregion
 
                 #region  Add the GameController
 
 
-                flipCommandQueue = new FlipCommandQueue();
-                gameController.Initialize(inputProvider, flipCommandQueue, fsm, _gameConfig.flipAnimationDuration);
+                _flipCommandQueue = new FlipCommandQueue();
+                _gameController.Initialize(_inputProvider, _flipCommandQueue, _fsm, _gameConfig.flipAnimationDuration);
 
                 #endregion
 
         }
 
-        private bool HandledSerializeFieldDependencies()
+        private bool ValidateFields()
         {
-                if (InputProviders == null || _cardPrefab == null
-                || _gameConfig == null || _soundConfig == null
-                || _audioSource == null || _boardContainer == null
-                || _uIController == null || layoutSelector == null)
-                {
-                        return false;
-                }
-                return true;
+                return InputProviders != null
+                    && _cardPrefab != null
+                    && _gameConfig != null
+                    && _soundConfig != null
+                    && _audioSource != null
+                    && _uIController != null
+                    && _boardContainer != null
+                    && layoutSelector != null;
         }
 
-        private void SetUpInput()
+        private void SetupInput()
         {
 #if UNITY_STANDALONE || UNITY_WEBGL || UNITY_EDITOR
-                inputProvider = InputProviders.GetComponentInChildren<MouseVectorInputProvider>();
+                _inputProvider = InputProviders.GetComponentInChildren<MouseVectorInputProvider>();
 #elif UNITY_IOS || UNITY_ANDROID
                 inputProvider = IInputProviders.GetComponentInChildren<TouchVectorInputProvider>();
 #else

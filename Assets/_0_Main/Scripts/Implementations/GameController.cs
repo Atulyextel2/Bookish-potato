@@ -25,6 +25,13 @@ public class GameController : MonoBehaviour
         _fsm.OnGameOver += () => _input.Disable();
     }
 
+    public void ClearAllEvents()
+    {
+        _input.OnFlipRequest -= HandleRay;
+        _fsm.OnGroupReady -= HandleOnGroupReady;
+        _fsm.OnGameOver -= () => _input.Disable();
+    }
+
     private void HandleRay(Ray ray)
     {
         if (Physics.Raycast(ray, out var hit, Mathf.Infinity) && hit.collider.TryGetComponent<CardView>(out var view))

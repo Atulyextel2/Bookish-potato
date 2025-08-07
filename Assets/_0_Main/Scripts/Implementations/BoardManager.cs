@@ -66,6 +66,8 @@ public class BoardManager
 
             rt.anchoredPosition = new Vector2(cell.x, cell.y);
             rt.sizeDelta = new Vector2(cell.width, cell.height);
+            view.gameObject.GetComponent<BoxCollider>().center = new Vector2(cell.width / 2, -cell.height / 2);
+            view.gameObject.GetComponent<BoxCollider>().size = rt.sizeDelta;
         }
     }
 }

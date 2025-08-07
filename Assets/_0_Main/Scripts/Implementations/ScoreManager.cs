@@ -11,7 +11,7 @@ public class ScoreManager
     {
         Matches = matches;
         Tries = tries;
-        //OnScoreChanged?.Invoke(Matches, Tries);
+        OnScoreChanged?.Invoke(Matches, Tries);
     }
 
     public void SetUpLeaderBoard(GameProgress gameProgress)
