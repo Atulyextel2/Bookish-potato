@@ -106,6 +106,7 @@ public class GameCompositionRoot : MonoBehaviour
         }
         private void OnGameOver()
         {
+                _boardContainer.gameObject.SetActive(false);
                 _inputProvider.Disable();
         }
 
@@ -125,6 +126,7 @@ public class GameCompositionRoot : MonoBehaviour
         private void OnStartPressed()
         {
                 ClearGame();
+                _boardContainer.gameObject.SetActive(true);
                 _scoreManager.SetInitial(0, 0);
                 #region Building Game Board 
 

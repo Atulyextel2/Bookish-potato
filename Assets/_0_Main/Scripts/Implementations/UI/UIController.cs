@@ -66,4 +66,8 @@ public class UIController : MonoBehaviour
         matchesText.text = $"Matches: {matches}";
         triesText.text = $"Tries: {tries}";
     }
+    public void HandleGameOver()
+    {
+
+    }
 }
