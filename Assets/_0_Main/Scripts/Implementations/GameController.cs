@@ -34,14 +34,12 @@ public class GameController : MonoBehaviour
     }
     private void HandleOnGroupReady(List<Card> group)
     {
-        Debug.Log("GC HandleOnGroupReady " + group);
         StartCoroutine(DelayedCheck(group));
     }
     private void Update()
     {
         if (!_processing && _queue.HasNext)
         {
-            Debug.Log("GC Update ");
             FlipCommand cmd = _queue.Dequeue();
             _processing = true;
             _fsm.HandleCardFlip(cmd.Card);
@@ -50,7 +48,6 @@ public class GameController : MonoBehaviour
 
     public void OnFlipAnimationComplete(Card card)
     {
-        Debug.Log("GC OnFlipAnimationComplete " + card.IsFaceUp);
         _processing = false;
 
         if (card.IsFaceUp)
@@ -61,7 +58,6 @@ public class GameController : MonoBehaviour
 
     private IEnumerator DelayedCheck(List<Card> group)
     {
-        Debug.Log("GC DelayedCheck ");
         yield return new WaitForSeconds(_delay);
         bool isMatch = group.TrueForAll(c => c.MatchId == group[0].MatchId);
         _fsm.HandleMatchResult(isMatch, group);

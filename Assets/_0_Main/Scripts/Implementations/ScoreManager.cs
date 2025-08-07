@@ -24,7 +24,6 @@ public class ScoreManager
 
     public void RecordResult(bool isMatch)
     {
-        UnityEngine.Debug.Log(" RecordResult called from ScoreManager " + isMatch);
         Tries++;
         if (isMatch) Matches++;
         OnScoreChanged?.Invoke(Matches, Tries);

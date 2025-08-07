@@ -107,7 +107,6 @@ public class GameCompositionRoot : MonoBehaviour
 
                 #region Building FSM
                 int totalGroups = (_selRows * _selCols) / _gameConfig.matchGroupSize;
-                Debug.Log("totalGroups " + totalGroups);
                 GameStateMachine fsm = new GameStateMachine(audioManager, scoreManager, _gameConfig.matchGroupSize, totalGroups);
                 fsm.OnGameOver += OnGameOver;
 

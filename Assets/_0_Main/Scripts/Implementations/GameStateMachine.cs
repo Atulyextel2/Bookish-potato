@@ -40,7 +40,6 @@ public class GameStateMachine
 
     public void HandleFlipCompleted(Card card)
     {
-        UnityEngine.Debug.Log("GFSM HandleFlipCompleted " + card);
         _currentGroup.Add(card);
         if (_currentGroup.Count == _matchGroupSize)
         {
@@ -50,7 +49,6 @@ public class GameStateMachine
 
     public void HandleMatchResult(bool isMatch, List<Card> group)
     {
-        UnityEngine.Debug.Log("GFSM HandleMatchResult");
         _audio.Play(isMatch ? SoundType.Match : SoundType.Mismatch);
         _score.RecordResult(isMatch);
         OnMatchResult?.Invoke(isMatch, group);
