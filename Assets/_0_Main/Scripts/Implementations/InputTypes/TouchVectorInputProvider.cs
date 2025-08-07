@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class TouchVectorInputProvider : MonoBehaviour, IInputProvider
 {
-    public event Action<Vector2> OnFlipRequest;
+    public event Action<Ray> OnFlipRequest;
     void Update()
     {
         if (Input.touchCount == 1 && Input.touches[0].phase == TouchPhase.Began)
         {
-            var worldPos = Camera.main.ScreenToWorldPoint(Input.touches[0].position);
-            OnFlipRequest?.Invoke(worldPos);
+            var touchPos = Input.touches[0].position;
+            Ray r = Camera.main.ScreenPointToRay(touchPos);
+            OnFlipRequest?.Invoke(r);
         }
     }
     public void Enable() => this.enabled = true;

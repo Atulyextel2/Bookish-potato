@@ -17,12 +17,16 @@ public class GameController : MonoBehaviour
         _delay = flipDelay;
 
         _input.Enable();
-        _input.OnFlipRequest += pos =>
+        _input.OnFlipRequest += HandleRay;
+    }
+
+    void HandleRay(Ray ray)
+    {
+
+        if (Physics.Raycast(ray, out var hit, Mathf.Infinity) && hit.collider.TryGetComponent<CardView>(out var view))
         {
-            var hit = Physics2D.Raycast(pos, Vector2.zero);
-            if (hit.collider?.TryGetComponent<CardView>(out var v) == true)
-                _queue.Enqueue(new FlipCommand(v.card));
-        };
+            _queue.Enqueue(new FlipCommand(view.card));
+        }
     }
 
     void Update()

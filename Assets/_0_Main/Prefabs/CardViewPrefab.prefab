@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4754187365074747040}
   - component: {fileID: 4754187365074747041}
+  - component: {fileID: 5835367154438737492}
   m_Layer: 0
   m_Name: CardViewPrefab
   m_TagString: Untagged
@@ -51,6 +52,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardImage: {fileID: 4754187365576649235}
+--- !u!65 &5835367154438737492
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4754187365074747039}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 114, y: 152, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4754187365576649233
 GameObject:
   m_ObjectHideFlags: 0

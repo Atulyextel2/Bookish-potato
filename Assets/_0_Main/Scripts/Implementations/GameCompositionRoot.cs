@@ -62,8 +62,8 @@ public class GameCompositionRoot : MonoBehaviour
         private void HookUpUI(int defaultIdx)
         {
                 scoreManager.OnScoreChanged += _uIController.UpdateScore;
-                _uIController.InitializeLevelDropdown(_gameConfig.presets, defaultIdx);
                 _uIController.OnLevelSelected += OnLevelSelected;
+                _uIController.InitializeLevelDropdown(_gameConfig.presets, defaultIdx);
                 _uIController.OnStart += OnStartPressed;
                 _uIController.OnHome += OnHomePressed;
         }
@@ -77,16 +77,15 @@ public class GameCompositionRoot : MonoBehaviour
 
         void OnHomePressed()
         {
-                // Clear cards
                 foreach (Transform child in _boardContainer)
                         Destroy(child.gameObject);
 
-                // Disable input; UIController handles canvas swap
-                GetComponent<IInputProvider>().Disable();
+                inputProvider.Disable();
         }
 
         void OnLevelSelected(int rows, int cols, int idx)
         {
+                Debug.Log("!@# OnLevelSelected " + rows + cols + idx);
                 _selRows = rows;
                 _selCols = cols;
                 _selPresetIdx = idx;
