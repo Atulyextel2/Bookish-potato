@@ -15,11 +15,9 @@ public class GameStateMachine
     public event Action GameOver;    // fired when all groups matched
     public IGameState CurrentState => _current;
 
-    public GameStateMachine(
-        IAudioService audio,
-        ScoreManager score,
-        int matchGroupSize,
-        int totalGroups)
+    public event Action<bool, List<Card>> OnMatchChecked;
+
+    public GameStateMachine(IAudioService audio, ScoreManager score, int matchGroupSize, int totalGroups)
     {
         _audio = audio;
         _score = score;
@@ -44,16 +42,20 @@ public class GameStateMachine
 
     internal void RecordResult(bool isMatch)
     {
+        var cards = new List<Card>(_selection);
         _score.RecordResult(isMatch);
         if (isMatch) _matchedGroups++;
-
+        OnMatchChecked?.Invoke(isMatch, cards);
+        _selection.Clear();
         if (_matchedGroups >= _totalGroups)
         {
             GameOver?.Invoke();
             TransitionTo(new GameOverState(this));
         }
         else
+        {
             TransitionTo(new WaitingForFlipState(this));
+        }
     }
 
     internal void PlayGameOver()
