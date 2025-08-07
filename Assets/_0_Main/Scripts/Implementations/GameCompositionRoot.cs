@@ -2,6 +2,7 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
+// This class is responsible for passing the dependenices to everyone
 public class GameCompositionRoot : MonoBehaviour
 {
         [SerializeField] private GameObject InputProviders;
@@ -36,16 +37,11 @@ public class GameCompositionRoot : MonoBehaviour
                 {
                         _progressRepository = new JsonFileProgressRepository();
                         GameProgress _lastSavedGameProgress = _progressRepository.Load();
-
                         scoreManager = new ScoreManager();
-
                         SetUpInput();
-
                         audioManager = new AudioManager(_soundConfig, _audioSource);
-
                         int savedIndex = _gameConfig.presets.FindIndex(p => p.name == _lastSavedGameProgress.SelectedPresetName);
                         int defaultIdx = Mathf.Clamp(savedIndex, 0, _gameConfig.presets.Count - 1);
-
                         HookUpUI(defaultIdx);
                 }
                 else
@@ -111,7 +107,7 @@ public class GameCompositionRoot : MonoBehaviour
 
                 // FSM with dynamic match size
                 int totalGroups = (_selRows * _selRows) / _gameConfig.matchGroupSize;
-                var fsm = new GameStateMachine(audioManager, scoreManager, _gameConfig.matchGroupSize, totalGroups);
+                GameStateMachine fsm = new GameStateMachine(audioManager, scoreManager, _gameConfig.matchGroupSize, totalGroups);
                 fsm.GameOver += OnGameOver;
 
                 #endregion
@@ -121,7 +117,7 @@ public class GameCompositionRoot : MonoBehaviour
                 // TODO: need to handle gameController in a genric way so the just needs to be reinit instead of remove and adding again.
                 gameController = this.gameObject.AddComponent<GameController>();
                 flipCommandQueue = new FlipCommandQueue();
-                gameController.Initialize(inputProvider, flipCommandQueue, fsm, _gameConfig.flipAnimationDuration);
+                gameController.Initialize(inputProvider, flipCommandQueue, fsm, _gameConfig.flipAnimationDuration, audioManager);
 
                 #endregion
 

@@ -11,7 +11,10 @@ public class CardView : MonoBehaviour
         if (card != null)
         {
             this.card = card;
-            card.OnFlipped += c => cardImage.sprite = c.IsFaceUp ? face : back;
+            card.OnFlipped += c =>
+            {
+                cardImage.sprite = c.IsFaceUp ? face : back;
+            };
             cardImage.sprite = back;
         }
     }
