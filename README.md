@@ -176,8 +176,8 @@ We follow a **protected-branch workflow** to keep our main codebase stable while
 We use a `.github/CODEOWNERS` file to define who can approve changes to protected branches.  
 Current global Code Owner:
 ```
-* @Atulyextel2
-/.github/CODEOWNERS @Atulyextel2
+* @your-github-username
+/.github/CODEOWNERS @your-github-username
 ```
 > Add other maintainers or teams on the `*` line if you want them to be able to approve PRs.
 
@@ -188,4 +188,43 @@ Current global Code Owner:
 ```
 (feature/*)  →  PR →  develop  →  PR →  main
 (hotfix/*)   →  PR →  main (+ cherry-pick/merge into develop)
+```
+
+---
+
+## 🔄 Contribution Workflow Overview (ASCII)
+
+```
+┌───────────────────────┐
+│     feature/*          │
+│  (or hotfix/*)         │
+│  Push allowed          │
+│  Force-push blocked    │
+└──────────┬─────────────┘
+           │  PR
+           ▼
+┌───────────────────────┐
+│       develop          │
+│  No direct pushes      │
+│  PR required           │
+│  Code Owner approval   │
+│  Force-push blocked    │
+│  Linear history (opt)  │
+└──────────┬─────────────┘
+           │  PR
+           ▼
+┌───────────────────────┐
+│         main           │
+│  No direct pushes      │
+│  PR required           │
+│  Code Owner approval   │
+│  Force-push blocked    │
+│  Linear history        │
+└──────────┬─────────────┘
+           │  (release prep)
+           ▼
+┌───────────────────────┐
+│     release/*          │
+│  Same as main rules    │
+└───────────────────────┘
 ```
