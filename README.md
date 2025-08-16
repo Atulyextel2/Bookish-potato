@@ -94,3 +94,98 @@ Scripts/
 ---
 
 Enjoy customizing and extending your Memory-Match game—**no code changes** needed!  
+
+---
+
+## 🤝 Contributing & Branching Strategy
+
+We follow a **protected-branch workflow** to keep our main codebase stable while encouraging contributions.
+
+### 🔀 Branch Types
+
+| Branch Type      | Purpose                                         | Rules |
+|------------------|-------------------------------------------------|-------|
+| `main`           | Production-ready code. Always stable and release-ready. | **Protected** — No direct pushes. PRs only, must be approved by Code Owner(s). |
+| `develop`        | Integration branch where features are merged before release. | **Protected** — No direct pushes. PRs only, must be approved by Code Owner(s). |
+| `release/*`      | Release prep branches (e.g., `release/1.0.0`). | **Protected** — Same rules as `main`. |
+| `feature/*`      | New features from `develop` (e.g., `feature/new-game-mode`). | Push allowed, force-push blocked. Merged into `develop` via PR. |
+| `hotfix/*`       | Urgent fixes to be merged directly into `main` and `develop`. | Push allowed, force-push blocked. PRs required for merging to protected branches. |
+
+---
+
+### 📌 Branch Naming Conventions
+
+- **Feature**: `feature/<short-description>`  
+  _Example_: `feature/add-scoreboard`
+- **Hotfix**: `hotfix/<short-description>`  
+  _Example_: `hotfix/fix-null-ref`
+- **Release**: `release/<version>`  
+  _Example_: `release/1.1.0`
+
+---
+
+### 🛠 How to Contribute
+
+1. **Sync with develop**
+   ```bash
+   git checkout develop
+   git pull
+   ```
+2. **Create your feature branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. **Commit & push**
+   ```bash
+   git commit -m "Add your message here"
+   git push -u origin feature/your-feature-name
+   ```
+4. **Open a Pull Request**
+   - **Base branch**: `develop`  
+   - **Compare branch**: `feature/your-feature-name`
+5. **Wait for Review**
+   - All PRs to `develop` and `main` require review from a **Code Owner** (currently: `@your-github-username`).
+   - The PR will not merge without approval.
+6. **Address Feedback**
+   - Any new commits after approval will dismiss the previous approval — you’ll need a fresh review.
+7. **Merge**
+   - We use **Squash merge** (one clean commit per PR).
+   - `develop` merges to `main` only after testing and review.
+
+---
+
+### 🔒 Branch Protection Rules (Summary)
+
+- **`main` & `release/*`**
+  - PRs required, no direct pushes
+  - Code Owner approval required
+  - Force pushes & deletions blocked
+- **`develop`**
+  - PRs required, no direct pushes
+  - Code Owner approval required
+  - Force pushes & deletions blocked
+- **`feature/*` & `hotfix/*`**
+  - Push allowed
+  - Force pushes blocked
+  - Merges into protected branches require PR & approval
+
+---
+
+### 👑 Code Owners
+
+We use a `.github/CODEOWNERS` file to define who can approve changes to protected branches.  
+Current global Code Owner:
+```
+* @your-github-username
+/.github/CODEOWNERS @your-github-username
+```
+> Add other maintainers or teams on the `*` line if you want them to be able to approve PRs.
+
+---
+
+### 📣 TL;DR Flow
+
+```
+(feature/*)  →  PR →  develop  →  PR →  main
+(hotfix/*)   →  PR →  main (+ cherry-pick/merge into develop)
+```
