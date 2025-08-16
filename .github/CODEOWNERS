@@ -1,0 +1,9 @@
+# CODEOWNERS file
+# This file tells GitHub who must review changes before they can be merged,
+# when "Require review from Code Owners" is enabled in branch rulesets.
+
+# The '*' pattern matches every file in the repository.
+# Replace 'your-github-username' with your actual GitHub username (case-sensitive).
+# To add more approvers later, just add more usernames or teams on the same line.
+
+* @Atulyextel2
