@@ -6,4 +6,9 @@
 # Replace 'your-github-username' with your actual GitHub username (case-sensitive).
 # To add more approvers later, just add more usernames or teams on the same line.
 
+# Global: you own everything (add others later on the same line)
 * @Atulyextel2
+
+# Self-protect the CODEOWNERS file so only owners listed here can approve changes to it
+/.github/CODEOWNERS @Atulyextel2
+
