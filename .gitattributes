@@ -1,0 +1,99 @@
+###############################################################################
+# Line endings: keep everything LF in repo (cross-platform friendly)
+###############################################################################
+* text=auto eol=lf
+
+# Always text
+*.txt   text eol=lf
+*.md    text eol=lf
+*.json  text eol=lf
+*.xml   text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.asmdef text eol=lf
+*.cs    text diff=csharp eol=lf
+*.shader text eol=lf
+*.hlsl   text eol=lf
+*.cginc  text eol=lf
+*.compute text eol=lf
+*.uss    text eol=lf
+*.uxml   text eol=lf
+
+# Unity meta files are small text – never LFS these
+*.meta  text eol=lf
+
+###############################################################################
+# Unity YAML assets — use Smart Merge (UnityYAMLMerge)
+# Make sure you also configure the merge driver in your global .gitconfig (below).
+###############################################################################
+*.unity            text merge=unityyamlmerge eol=lf
+*.prefab           text merge=unityyamlmerge eol=lf
+*.asset            text merge=unityyamlmerge eol=lf
+*.anim             text merge=unityyamlmerge eol=lf
+*.controller       text merge=unityyamlmerge eol=lf
+*.overrideController text merge=unityyamlmerge eol=lf
+*.mat              text merge=unityyamlmerge eol=lf
+*.physicMaterial   text merge=unityyamlmerge eol=lf
+*.timeline         text merge=unityyamlmerge eol=lf
+*.vfx              text merge=unityyamlmerge eol=lf
+# (add other YAML-based extensions you use to the list above)
+
+###############################################################################
+# Large/Binary assets — track with Git LFS
+# (Edit this list to fit your project’s actual asset types.)
+###############################################################################
+# Images / textures
+*.png  filter=lfs diff=lfs merge=lfs -text
+*.jpg  filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.tga  filter=lfs diff=lfs merge=lfs -text
+*.tif  filter=lfs diff=lfs merge=lfs -text
+*.tiff filter=lfs diff=lfs merge=lfs -text
+*.psd  filter=lfs diff=lfs merge=lfs -text
+*.psb  filter=lfs diff=lfs merge=lfs -text
+*.exr  filter=lfs diff=lfs merge=lfs -text
+*.hdr  filter=lfs diff=lfs merge=lfs -text
+*.dds  filter=lfs diff=lfs merge=lfs -text
+*.ktx  filter=lfs diff=lfs merge=lfs -text
+*.ktx2 filter=lfs diff=lfs merge=lfs -text
+
+# Audio
+*.wav  filter=lfs diff=lfs merge=lfs -text
+*.mp3  filter=lfs diff=lfs merge=lfs -text
+*.ogg  filter=lfs diff=lfs merge=lfs -text
+*.aif  filter=lfs diff=lfs merge=lfs -text
+*.aiff filter=lfs diff=lfs merge=lfs -text
+*.flac filter=lfs diff=lfs merge=lfs -text
+
+# Video
+*.mp4  filter=lfs diff=lfs merge=lfs -text
+*.mov  filter=lfs diff=lfs merge=lfs -text
+*.avi  filter=lfs diff=lfs merge=lfs -text
+*.webm filter=lfs diff=lfs merge=lfs -text
+
+# 3D / DCC
+*.fbx   filter=lfs diff=lfs merge=lfs -text
+*.obj   filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+*.dae   filter=lfs diff=lfs merge=lfs -text
+*.3ds   filter=lfs diff=lfs merge=lfs -text
+*.c4d   filter=lfs diff=lfs merge=lfs -text
+*.max   filter=lfs diff=lfs merge=lfs -text
+*.gltf  filter=lfs diff=lfs merge=lfs -text
+*.glb   filter=lfs diff=lfs merge=lfs -text
+
+# Archives / packages / binaries
+*.unitypackage filter=lfs diff=lfs merge=lfs -text
+*.zip   filter=lfs diff=lfs merge=lfs -text
+*.7z    filter=lfs diff=lfs merge=lfs -text
+*.rar   filter=lfs diff=lfs merge=lfs -text
+*.bin   filter=lfs diff=lfs merge=lfs -text
+*.bytes filter=lfs diff=lfs merge=lfs -text
+
+# Compiled libs — never diff, just binary
+*.dll binary
+*.pdb binary
+*.so  binary
+*.dylib binary
+*.lib binary
+*.a   binary
