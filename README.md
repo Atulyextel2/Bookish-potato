@@ -176,8 +176,8 @@ We follow a **protected-branch workflow** to keep our main codebase stable while
 We use a `.github/CODEOWNERS` file to define who can approve changes to protected branches.  
 Current global Code Owner:
 ```
-* @your-github-username
-/.github/CODEOWNERS @your-github-username
+* @Atulyextel2
+/.github/CODEOWNERS @Atulyextel2
 ```
 > Add other maintainers or teams on the `*` line if you want them to be able to approve PRs.
 
