@@ -196,35 +196,35 @@ Current global Code Owner:
 
 ```
 ┌───────────────────────┐
-│     feature/*          │
-│  (or hotfix/*)         │
-│  Push allowed          │
-│  Force-push blocked    │
-└──────────┬─────────────┘
+│     feature/*         │
+│  (or hotfix/*)        │
+│  Push allowed         │
+│  Force-push blocked   │
+└──────────┬────────────┘
            │  PR
            ▼
 ┌───────────────────────┐
-│       develop          │
-│  No direct pushes      │
-│  PR required           │
-│  Code Owner approval   │
-│  Force-push blocked    │
-│  Linear history (opt)  │
-└──────────┬─────────────┘
+│       develop         │
+│  No direct pushes     │
+│  PR required          │
+│  Code Owner approval  │
+│  Force-push blocked   │
+│  Linear history (opt) │
+└──────────┬────────────┘
            │  PR
            ▼
 ┌───────────────────────┐
-│         main           │
-│  No direct pushes      │
-│  PR required           │
-│  Code Owner approval   │
-│  Force-push blocked    │
-│  Linear history        │
-└──────────┬─────────────┘
+│         main          │
+│  No direct pushes     │
+│  PR required          │
+│  Code Owner approval  │
+│  Force-push blocked   │
+│  Linear history       │
+└──────────┬────────────┘
            │  (release prep)
            ▼
 ┌───────────────────────┐
-│     release/*          │
-│  Same as main rules    │
+│     release/*         │
+│  Same as main rules   │
 └───────────────────────┘
 ```
