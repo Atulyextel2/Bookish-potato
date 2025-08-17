@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "5e7a02d8dcf3b11bc210d3fe0e7885e7705c60405ff0a8efbe06d132a3e9a184.sln"
+    "dotnet.defaultSolution": "Bookish-potato.sln"
 }

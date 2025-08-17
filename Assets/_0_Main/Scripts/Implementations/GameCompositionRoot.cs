@@ -177,9 +177,9 @@ public class GameCompositionRoot : MonoBehaviour
 #if UNITY_STANDALONE || UNITY_WEBGL || UNITY_EDITOR
                 _inputProvider = InputProviders.GetComponentInChildren<MouseVectorInputProvider>();
 #elif UNITY_IOS || UNITY_ANDROID
-                inputProvider = IInputProviders.GetComponentInChildren<TouchVectorInputProvider>();
+                _inputProvider = InputProviders.GetComponentInChildren<TouchVectorInputProvider>();
 #else
-                inputProvider = InputProviders.GetComponentInChildren<MouseVectorInputProvider>();
+                _inputProvider = InputProviders.GetComponentInChildren<MouseVectorInputProvider>();
 #endif
         }
 
